@@ -17,57 +17,17 @@ import {
 import { IoSend, IoImage, IoDocument, IoHappy } from "react-icons/io5";
 import { format } from "date-fns";
 import Image from 'next/image';
-
-const ChatContainer = styled(Box)(({ theme }) => ({
-  height: "95vh",
-  width: "95vw",
-  display: "flex",
-  margin: "20px auto",
-  flexDirection: "column",
-  backgroundColor: theme.palette.background.default,
-}));
-
-const Header = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderBottom: `1px solid ${theme.palette.divider}`,
-  display: "flex",
-  alignItems: "center",
-  gap: theme.spacing(2),
-}));
-
-const MessageArea = styled(Box)({
-  flex: 1,
-  overflowY: "auto",
-  padding: "16px",
-});
-
-const InputArea = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderTop: `1px solid ${theme.palette.divider}`,
-  display: "flex",
-  gap: theme.spacing(1),
-  alignItems: "center",
-}));
-
-const Message = styled(Paper)(({ theme, isOwn }) => ({
-  padding: theme.spacing(1.5),
-  marginBottom: theme.spacing(1),
-  maxWidth: "70%",
-  alignSelf: isOwn ? "flex-end" : "flex-start",
-  backgroundColor: isOwn
-    ? theme.palette.primary.main
-    : theme.palette.background.paper,
-  color: isOwn
-    ? theme.palette.primary.contrastText
-    : theme.palette.text.primary,
-}));
+import ChatContainer from "@/components/ChatContainer";
+import ChatHeader from "@/components/ChatHeader";
+import MessageArea from "@/components/messageArea";
+import InputArea from "@/components/InputArea";
+import Message from "@/components/Message";
 
 const Page = () => {
   const { messages, input, handleSubmit, handleInputChange, status } =
     useChat();
   const [files, setFiles] = useState<FileList | undefined>(undefined);
   const messageAreaRef = useRef(null);
-  const [isTyping, setIsTyping] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
   const imageInputRef = useRef(null);
@@ -131,7 +91,7 @@ const Page = () => {
 
   return (
     <ChatContainer>
-      <Header>
+      <ChatHeader>
         <Badge
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -148,15 +108,12 @@ const Page = () => {
             Online
           </Typography>
         </Box>
-      </Header>
+      </ChatHeader>
 
       <MessageArea ref={messageAreaRef} >
         <Stack>
           {messages.map((message, i) => (
             <Message key={i} isOwn={message.role === "user"}>
-              {message.role === "assistant"
-                ? JSON.stringify(message.content)
-                : null}
               <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
                 {message.content}
               </Typography>
@@ -192,13 +149,6 @@ const Page = () => {
               </div>
             </Message>
           ))}
-          {isTyping && (
-            <Box sx={{ display: "flex", gap: 1, p: 1 }}>
-              <CircularProgress size={10} />
-              <CircularProgress size={10} />
-              <CircularProgress size={10} />
-            </Box>
-          )}
         </Stack>
       </MessageArea>
 
