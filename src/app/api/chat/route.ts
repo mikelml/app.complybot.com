@@ -8,14 +8,20 @@ export async function POST(req: Request) {
   const result = streamText({
     model: openai('gpt-4o'),
     system: 'You are a helpful assistant.',
-    messages,
+    messages: [
+      ...messages,
+    ],
+    maxTokens: 1000,
     onError: (error) => {
       console.error('Error:', error);
+    },
+    onStepFinish: (message) => {
+      console.log('Step finished message:', message);
     },
     onFinish: (message) => {
       console.log('Finished message:', message);
     }
   });
-  
+
   return result.toDataStreamResponse();
 }
