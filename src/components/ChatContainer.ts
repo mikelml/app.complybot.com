@@ -1,10 +1,8 @@
 import { Box, styled } from "@mui/material";
 
 const ChatContainer = styled(Box)(({ theme }) => ({
-    height: "95vh",
-    width: "95vw",
+    height: "calc(100vh - 64px)",
     display: "flex",
-    margin: "20px auto",
     flexDirection: "column",
     backgroundColor: theme.palette.background.default,
   }));
