@@ -1,6 +1,10 @@
 import { Paper, styled } from "@mui/material";
 
-const Message = styled(Paper)(({ theme, isOwn }) => ({
+interface MessageProps {
+  isOwn: boolean;
+}
+
+const Message = styled(Paper)<MessageProps>(({ theme, isOwn }) => ({
     padding: theme.spacing(1.5),
     marginBottom: theme.spacing(1),
     maxWidth: "70%",

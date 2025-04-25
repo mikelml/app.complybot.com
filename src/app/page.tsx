@@ -11,6 +11,7 @@ import AppBar from "@/components/AppBar";
 import Login from "@/components/Login";
 
 type Message = {
+  id: string;
   role: "user" | "assistant";
   content: string;
 };
@@ -27,8 +28,8 @@ const Page = () => {
   const [chats, setChats] = useState<Chat[]>([]);
   const [ready, setReady] = useState(false);
   const [files, setFiles] = useState<FileList | undefined>(undefined);
-  const fileInputRef = useRef(null);
-  const imageInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   
   useEffect(() => {
     const fetchChats = async () => {
@@ -46,7 +47,7 @@ const Page = () => {
     initialMessages: ready ? chats[0]?.messages ?? [] : [],
   });
 
-  const onHandleSubmit = (event) => {
+  const onHandleSubmit = (event: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<Element> | React.MouseEvent<Element, MouseEvent>) => {
     event.preventDefault();
     if (!input.trim()) return;
 
@@ -74,15 +75,16 @@ const Page = () => {
       <ChatContainer>
         <ChatHeaderContainer />
         <ChatMessageArea messages={messages} />
+        
         <ChatInputAreaContainer
           input={input}
           handleInputChange={handleInputChange}
           onHandleSubmit={onHandleSubmit}
-          files={files}
+          files={files ?? null}
           setFiles={setFiles}
           fileInputRef={fileInputRef}
           imageInputRef={imageInputRef}
-          status={status}
+          status={!!status}
         />
       </ChatContainer>
     </>

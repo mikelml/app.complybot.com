@@ -1,4 +1,4 @@
-import mongoose, { Schema, models, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 
 const AttachmentSchema = new Schema({
     name: { type: String, required: true },
@@ -18,4 +18,4 @@ const ChatSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-export default models.Chat || model('Chat', ChatSchema);
+export default mongoose.models.Chat || model('Chat', ChatSchema);

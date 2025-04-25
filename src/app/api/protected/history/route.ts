@@ -8,7 +8,8 @@ export async function GET() {
   if (!session) return new Response('Unauthorized', { status: 401 });
 
   await connectToDatabase();
-
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const chats = await Chat.find({ userId: session.user?.email })
     .sort({ createdAt: -1 })
     .lean();

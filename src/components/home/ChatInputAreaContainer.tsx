@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   IconButton,
   TextField,
@@ -12,7 +12,18 @@ import InputArea from "../InputArea";
 import { IoClose, IoDocument, IoImage, IoSend } from "react-icons/io5";
 import FilesIndicator from "../FilesIndicator";
 
-const ChatHeaderContainer = ({
+interface ChatHeaderContainerProps {
+  input: string;
+  onHandleSubmit: (event: React.KeyboardEvent | React.MouseEvent) => void;
+  handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  files: FileList | null;
+  setFiles: React.Dispatch<React.SetStateAction<FileList | null>>;
+  fileInputRef: React.RefObject<HTMLInputElement>;
+  imageInputRef: React.RefObject<HTMLInputElement>;
+  status: boolean;
+}
+
+const ChatHeaderContainer: React.FC<ChatHeaderContainerProps> = ({
   input,
   onHandleSubmit,
   handleInputChange,
@@ -24,34 +35,43 @@ const ChatHeaderContainer = ({
 }) => {
   const [uploading, setUploading] = useState(false);
 
-  const handleFileUpload = async (event, type) => {
-    const file = event.target.files[0];
+interface HandleFileUploadEvent {
+    target: {
+        files: FileList | null;
+    };
+}
+
+const handleFileUpload = async (
+    event: HandleFileUploadEvent,
+    type: "pdf" | "image"
+): Promise<void> => {
+    const file = event.target.files?.[0];
     if (!file) return;
 
     const isValidFile =
-      type === "pdf"
-        ? file.type === "application/pdf" && file.size <= 10 * 1024 * 1024
-        : ["image/jpeg", "image/png", "image/gif"].includes(file.type) &&
-          file.size <= 5 * 1024 * 1024;
+        type === "pdf"
+            ? file.type === "application/pdf" && file.size <= 10 * 1024 * 1024
+            : ["image/jpeg", "image/png", "image/gif"].includes(file.type) &&
+                file.size <= 5 * 1024 * 1024;
 
     if (!isValidFile) {
-      alert(`Invalid ${type} file. Please check size and format requirements.`);
-      return;
+        alert(`Invalid ${type} file. Please check size and format requirements.`);
+        return;
     }
 
     setUploading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+        await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      if (event.target.files) {
-        setFiles(event.target.files);
-      }
+        if (event.target.files) {
+            setFiles(event.target.files);
+        }
     } catch (error) {
-      alert("Error uploading file. Please try again.");
+        console.error("Error uploading file:", error);
     } finally {
-      setUploading(false);
+        setUploading(false);
     }
-  };
+};
   const handleRemoveAttachment = () => {
     setFiles(null);
     fileInputRef.current.value = "";
@@ -106,9 +126,9 @@ const ChatHeaderContainer = ({
           multiline
           rows={2}
           maxRows={6}
-          disabled={status !== "ready"}
+          disabled={status !== true}
         />
-        {files?.length > 0 && (
+        {files && files.length > 0 && (
           <FilesIndicator>
             <Typography variant="caption" color="primary">
               {files?.length} attachment(s)

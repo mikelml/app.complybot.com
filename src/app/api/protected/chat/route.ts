@@ -11,7 +11,6 @@ export async function POST(req: Request) {
   if (!session) return new Response('Unauthorized', { status: 401 });
   
   const { messages }: { messages: UIMessage[] } = await req.json();
-  let fullAssistantMessage = '';
 
   const result = streamText({
     model: openai('gpt-4o'),
@@ -39,6 +38,8 @@ export async function POST(req: Request) {
       const savetoDB = async () => {  
         try {
           await connectToDatabase();
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           await Chat.findOneAndUpdate(
             { userId: session.user?.email },
             {
@@ -50,7 +51,7 @@ export async function POST(req: Request) {
                     },
                     {
                       role: 'assistant',
-                      content: fullAssistantMessage || finalMessage.text,
+                      content: finalMessage.text,
                     },
                   ],
                 },
