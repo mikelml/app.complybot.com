@@ -39,12 +39,14 @@ const ChatMessageArea = ({ messages }) => {
                     <Image
                       key={`${i}-${index}`}
                       src={attachment?.url || ""}
-                      width={500}
-                      height={500}
+                      className="attachment-image"
+                      width={300}
+                      height={300}
                       alt={attachment.name ?? `attachment-${index}`}
                     />
                   ) : attachment.contentType?.startsWith("application/pdf") ? (
                     <iframe
+                      className="attachment-pdf"
                       key={`${i}-${index}`}
                       src={attachment?.url || ""}
                       width="500"
