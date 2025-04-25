@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Box, Typography, Avatar, Badge } from "@mui/material";
-import ChatHeader from "../ChatHeader"; // Ensure ChatHeader is a default export and a valid React component
+import ChatHeader from "../ChatHeader";
 
 const ChatHeaderContainer = () => {
   return (

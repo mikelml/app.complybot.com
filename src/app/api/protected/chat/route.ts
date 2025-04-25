@@ -8,7 +8,6 @@ import Chat from '@/models/Chat';
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
-  console.log("🚀 ~ POST ~ session:", session)
   if (!session) return new Response('Unauthorized', { status: 401 });
   
   const { messages }: { messages: UIMessage[] } = await req.json();
