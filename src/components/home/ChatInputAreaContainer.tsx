@@ -9,6 +9,7 @@ const ChatHeaderContainer = ({
   input,
   onHandleSubmit,
   handleInputChange,
+  files,
   setFiles,
   fileInputRef,
   status
@@ -79,21 +80,30 @@ const ChatHeaderContainer = ({
         <IoImage />
       </IconButton>
 
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Type a message..."
-        value={input}
-        onChange={handleInputChange}
-        onKeyPress={(e) =>
-          e.key === "Enter" && !e.shiftKey && onHandleSubmit(e)
-        }
-        size="small"
-        multiline
-        rows={2}
-        maxRows={6}
-        disabled={status !== "ready"}
-      />
+      <Box sx={{ position: "relative", flex: 1 }}>
+        <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Type a message..."
+            value={input}
+            onChange={handleInputChange}
+            onKeyPress={(e) =>
+            e.key === "Enter" && !e.shiftKey && onHandleSubmit(e)
+            }
+            size="small"
+            multiline
+            rows={2}
+            maxRows={6}
+            disabled={status !== "ready"}
+        />
+        {files.length > 0 && (
+                <AttachmentIndicator>
+                <Typography variant="caption" color="primary">
+                    {files.length} attachment(s)
+                </Typography>
+                </AttachmentIndicator>
+            )}
+      </Box>
       <IconButton
         color="primary"
         onClick={onHandleSubmit}

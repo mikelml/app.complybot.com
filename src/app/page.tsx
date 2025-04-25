@@ -74,6 +74,7 @@ const Page = () => {
           input={input}
           handleInputChange={handleInputChange}
           onHandleSubmit={onHandleSubmit}
+          files={files}
           setFiles={setFiles}
           fileInputRef={fileInputRef}
           status={status}

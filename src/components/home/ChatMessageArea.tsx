@@ -38,7 +38,7 @@ const ChatMessageArea = ({ messages }) => {
                   attachment.contentType?.startsWith("image/") ? (
                     <Image
                       key={`${i}-${index}`}
-                      src={attachment.url}
+                      src={attachment?.url || ""}
                       width={500}
                       height={500}
                       alt={attachment.name ?? `attachment-${index}`}
@@ -46,7 +46,7 @@ const ChatMessageArea = ({ messages }) => {
                   ) : attachment.contentType?.startsWith("application/pdf") ? (
                     <iframe
                       key={`${i}-${index}`}
-                      src={attachment.url}
+                      src={attachment?.url || ""}
                       width="500"
                       height="600"
                       title={attachment.name ?? `attachment-${index}`}

@@ -26,17 +26,49 @@ export async function POST(req: Request) {
       console.log('Step finished message:', message);
     },
     onFinish: (finalMessage) => {
+      const lastUserMessage = messages.at(-1);
+      const safeUserMessage = {
+        role: lastUserMessage?.role,
+        content: lastUserMessage?.content,
+        experimental_attachments: lastUserMessage?.experimental_attachments?.map((att) => ({
+          name: att.name,
+          contentType: att.contentType,
+          url: "", // o podrías eliminarlo si no tienes url
+        })),
+      };
       const savetoDB = async () => {  
         try {
           await connectToDatabase();
-          await Chat.create({
-            userId: session.user?.email,
-            createdAt: new Date(),
-            messages: [
-              ...messages,
-              { role: 'assistant', content: fullAssistantMessage || finalMessage?.text },
-            ],
-          });
+          console.log("🧾 Mensaje a guardar:", safeUserMessage);
+          await Chat.findOneAndUpdate(
+            { userId: session.user?.email },
+            {
+              $push: { 
+                messages: {
+                  $each: [
+                    {
+                      ...safeUserMessage, // último mensaje enviado por el usuario
+                    },
+                    {
+                      role: 'assistant',
+                      content: fullAssistantMessage || finalMessage.text,
+                    },
+                  ],
+                },
+              },
+              $setOnInsert: { createdAt: new Date() },
+            },
+            { upsert: true, new: true }
+          );
+
+          // await Chat.create({
+          //   userId: session.user?.email,
+          //   createdAt: new Date(),
+          //   messages: [
+          //     ...messages,
+          //     { role: 'assistant', content: fullAssistantMessage || finalMessage?.text },
+          //   ],
+          // });
           console.log('Message Saved succesfully:', finalMessage?.text);
         } catch (error) {
           console.error('❌ Error al guardar el chat:', error);
