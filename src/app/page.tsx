@@ -28,7 +28,8 @@ const Page = () => {
   const [ready, setReady] = useState(false);
   const [files, setFiles] = useState<FileList | undefined>(undefined);
   const fileInputRef = useRef(null);
-
+  const imageInputRef = useRef(null);
+  
   useEffect(() => {
     const fetchChats = async () => {
       const res = await fetch("/api/protected/history");
@@ -62,6 +63,9 @@ const Page = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   return session ? (
@@ -77,6 +81,7 @@ const Page = () => {
           files={files}
           setFiles={setFiles}
           fileInputRef={fileInputRef}
+          imageInputRef={imageInputRef}
           status={status}
         />
       </ChatContainer>

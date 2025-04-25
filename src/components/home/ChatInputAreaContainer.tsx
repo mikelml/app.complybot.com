@@ -1,9 +1,16 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { IconButton, TextField, CircularProgress } from "@mui/material";
+import {
+  IconButton,
+  TextField,
+  CircularProgress,
+  Typography,
+  Box,
+} from "@mui/material";
 import InputArea from "../InputArea";
-import { IoDocument, IoImage, IoSend } from "react-icons/io5";
+import { IoClose, IoDocument, IoImage, IoSend } from "react-icons/io5";
+import FilesIndicator from "../FilesIndicator";
 
 const ChatHeaderContainer = ({
   input,
@@ -12,10 +19,10 @@ const ChatHeaderContainer = ({
   files,
   setFiles,
   fileInputRef,
-  status
+  imageInputRef,
+  status,
 }) => {
   const [uploading, setUploading] = useState(false);
-  const imageInputRef = useRef(null);
 
   const handleFileUpload = async (event, type) => {
     const file = event.target.files[0];
@@ -45,6 +52,11 @@ const ChatHeaderContainer = ({
       setUploading(false);
     }
   };
+  const handleRemoveAttachment = () => {
+    setFiles(null);
+    fileInputRef.current.value = "";
+    imageInputRef.current.value = "";
+  }
 
   return (
     <InputArea>
@@ -82,27 +94,34 @@ const ChatHeaderContainer = ({
 
       <Box sx={{ position: "relative", flex: 1 }}>
         <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Type a message..."
-            value={input}
-            onChange={handleInputChange}
-            onKeyPress={(e) =>
+          fullWidth
+          variant="outlined"
+          placeholder="Type a message..."
+          value={input}
+          onChange={handleInputChange}
+          onKeyPress={(e) =>
             e.key === "Enter" && !e.shiftKey && onHandleSubmit(e)
-            }
-            size="small"
-            multiline
-            rows={2}
-            maxRows={6}
-            disabled={status !== "ready"}
+          }
+          size="small"
+          multiline
+          rows={2}
+          maxRows={6}
+          disabled={status !== "ready"}
         />
-        {files.length > 0 && (
-                <AttachmentIndicator>
-                <Typography variant="caption" color="primary">
-                    {files.length} attachment(s)
-                </Typography>
-                </AttachmentIndicator>
-            )}
+        {files?.length > 0 && (
+          <FilesIndicator>
+            <Typography variant="caption" color="primary">
+              {files?.length} attachment(s)
+            </Typography>
+            <IconButton
+              size="small"
+              onClick={() => handleRemoveAttachment()}
+              sx={{ padding: 0.5 }}
+            >
+              <IoClose size={14} />
+            </IconButton>
+          </FilesIndicator>
+        )}
       </Box>
       <IconButton
         color="primary"
