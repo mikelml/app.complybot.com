@@ -14,7 +14,22 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: openai('gpt-4o'),
-    system: 'You are a helpful assistant.',
+    system: `
+     If you recive PDF or Image extract all personally identifiable information (PII) cosider those as priority,
+     Email addresses (emailAddres),
+     Phone numbers (phoneNumber),
+     Social security numbers (socialSecurityNumber),
+     Credit card numbers (creditCardNumber),
+     Names (name)
+     Then, write a human-readable analysis of the document following this structure:
+ 
+     Name: ...
+     Phone Number: ...
+     Email Address: ...
+     LinkedIn: ...
+     <newline>
+     <your analysis>
+     `,
     messages,
     maxTokens: 1000,
     onError: (error) => {
