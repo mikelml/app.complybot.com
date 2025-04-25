@@ -64,8 +64,8 @@ const Page = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
     }
   };
 
